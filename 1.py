@@ -7,6 +7,8 @@ running = True
 W = 400
 H = 400
 FPS = 30
+Check = True    #переменная для движения противников
+count = 0       #глобальный счетчик
 
 UP = False  #состояние клавиш движения
 DOWN = False
@@ -33,6 +35,14 @@ Enemy4 = Sprite(365, 35, (255,0,0))
 Enemy5 = Sprite(475, 35, (255,0,0))
 Enemy6 = Sprite(585, 35, (255,0,0))
 
+def Eny (Ey, count):
+    if count % 100 == 0:
+        Enemy1.rect.y = Ey
+        Enemy2.rect.y = Ey
+        Enemy3.rect.y = Ey
+        Enemy4.rect.y = Ey
+        Enemy5.rect.y = Ey
+        Ey += 10
 while running:
 #время на один экран
     clock.tick(FPS)
@@ -53,6 +63,7 @@ while running:
             if event.key == K_s: DOWN = False
             if event.key == K_a: LEFT = False
             if event.key == K_d: RIGHT = False
+    
 
     sc.fill((0,0,0))
     sc.blit(Player.image, Player.rect) #поместить на экран объект
@@ -70,7 +81,27 @@ while running:
     if LEFT and Player.rect.x > 0 : Player.rect.x -= 2
     if RIGHT and Player.rect.x < W - 50 : Player.rect.x += 2
 
+    count+=1
+    if count % 30 == 0:
+        Check = not Check
+    Eny(Enemy1.rect.y, count)
+    if Check:
+        Enemy1.rect.x -= 2
+        Enemy2.rect.x -= 2
+        Enemy3.rect.x -= 2
+        Enemy4.rect.x -= 2
+        Enemy5.rect.x -= 2
+        
+        #count += 1
+    elif not Check:
+        Enemy1.rect.x += 2
+        Enemy2.rect.x += 2
+        Enemy3.rect.x += 2
+        Enemy4.rect.x += 2
+        Enemy5.rect.x += 2
+        #count += 1
     
-       
+    
+    
 
 pg.quit()
