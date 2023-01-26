@@ -1,0 +1,81 @@
+import pygame
+import random
+
+# Initialize pygame
+pygame.init()
+
+# Set the size of the window
+size = (700, 500)
+screen = pygame.display.set_mode(size)
+
+# Set the title of the window
+pygame.display.set_caption("Square Game")
+
+# Define the colors
+white = (255, 255, 255)
+black = (0, 0, 0)
+
+# Create the main square object
+main_square = pygame.Surface((50, 50))
+main_square.fill(white)
+main_square_rect = main_square.get_rect()
+
+# Create the group of squares
+square_group = pygame.sprite.Group()
+for i in range(5):
+    square = pygame.Surface((20, 20))
+    square.fill(black)
+    square_rect = square.get_rect()
+    square_rect.x = random.randint(0, size[0] - square_rect.width)
+    square_rect.y = random.randint(0, size[1] - square_rect.height)
+    square_rect.dx = random.randint(-2, 2)
+    square_rect.dy = random.randint(-2, 2)
+    square_group.add(square_rect)
+
+# Set the main square's initial position
+main_square_rect.x = size[0] / 2
+main_square_rect.y = size[1] / 2
+
+# Main game loop
+done = False
+while not done:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
+
+    # Move the main square with the arrow keys
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        main_square_rect.x -= 5
+    if keys[pygame.K_RIGHT]:
+        main_square_rect.x += 5
+    if keys[pygame.K_UP]:
+        main_square_rect.y -= 5
+    if keys[pygame.K_DOWN]:
+        main_square_rect.y += 5
+
+    # Move the group of squares
+    for square in square_group:
+        square.x += square.dx
+        square.y += square.dy
+
+        # Check if a square hits the edge of the screen
+        if square.x > size[0] - square.width or square.x < 0:
+            square.dx *= -1
+        if square.y > size[1] - square.height or square.y < 0:
+            square.dy *= -1
+
+    # Clear the screen
+    screen.fill((0, 0, 0))
+
+    # Draw the main square
+    screen.blit(main_square, main_square_rect)
+
+    # Draw the group of squares
+    for square in square_group:
+        screen.blit(square, square.rect)
+
+    # Update the display
+    pygame.display.flip()
+
+# Close the window and quit
